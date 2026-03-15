@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fractal Minds — NFT Collection</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a1a;
+            color: #e0e0ff;
+            min-height: 100vh;
+        }
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            background: linear-gradient(135deg, #0a0a2e 0%, #1a0a3e 50%, #0a1a2e 100%);
+            border-bottom: 1px solid #2a2a5a;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            background: linear-gradient(90deg, #7b68ee, #00bfff, #7b68ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: #a0a0d0;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .stat { text-align: center; }
+        .stat .num { font-size: 2rem; font-weight: bold; color: #7b68ee; }
+        .stat .label { font-size: 0.85rem; color: #8080b0; margin-top: 5px; }
+        .mint-box {
+            background: #12122a;
+            border: 1px solid #2a2a5a;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+        .mint-box h2 { margin-bottom: 20px; text-align: center; color: #c0c0ff; }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+        .btn-connect {
+            background: linear-gradient(135deg, #7b68ee, #6a5acd);
+            color: white;
+        }
+        .btn-connect:hover { background: linear-gradient(135deg, #8b78ff, #7a6add); transform: translateY(-2px); }
+        .btn-mint {
+            background: linear-gradient(135deg, #00bfff, #0099cc);
+            color: white;
+        }
+        .btn-mint:hover { background: linear-gradient(135deg, #20cfff, #00aadd); transform: translateY(-2px); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .price-info {
+            text-align: center;
+            padding: 15px;
+            background: #1a1a35;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .price-info .price { font-size: 1.5rem; color: #7b68ee; font-weight: bold; }
+        .price-info .usd { font-size: 0.85rem; color: #8080b0; }
+        #status {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+        #status.success { display: block; background: #0a2a1a; color: #4caf50; border: 1px solid #2a5a3a; }
+        #status.error { display: block; background: #2a0a1a; color: #f44336; border: 1px solid #5a2a3a; }
+        #status.info { display: block; background: #1a1a3a; color: #7b68ee; border: 1px solid #3a3a6a; }
+        .gallery {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .gallery h2 { text-align: center; margin-bottom: 30px; color: #c0c0ff; font-size: 1.8rem; }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .gallery-item {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #2a2a5a;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background: #12122a;
+        }
+        .gallery-item:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(123,104,238,0.2); }
+        .gallery-item img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+        .gallery-item .name { padding: 10px; text-align: center; font-size: 0.9rem; color: #a0a0d0; }
+        .links {
+            text-align: center;
+            padding: 30px 20px;
+        }
+        .links a {
+            display: inline-block;
+            margin: 5px 10px;
+            padding: 10px 25px;
+            background: #1a1a35;
+            border: 1px solid #3a3a6a;
+            border-radius: 8px;
+            color: #7b68ee;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .links a:hover { background: #2a2a55; border-color: #7b68ee; }
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #5050a0;
+            font-size: 0.85rem;
+            border-top: 1px solid #1a1a3a;
+        }
+        .wallet-addr {
+            font-size: 0.85rem;
+            color: #8080b0;
+            word-break: break-all;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Fractal Minds</h1>
+        <p>100 unique generative fractal artworks on Polygon. Algorithmic beauty meets blockchain permanence.</p>
+        <div class="stats">
+            <div class="stat">
+                <div class="num">100</div>
+                <div class="label">Total Supply</div>
+            </div>
+            <div class="stat">
+                <div class="num">5 MATIC</div>
+                <div class="label">Mint Price</div>
+            </div>
+            <div class="stat">
+                <div class="num">5%</div>
+                <div class="label">Royalty</div>
+            </div>
+        </div>
+        <div class="mint-box">
+            <h2>Mint Your Fractal</h2>
+            <div class="price-info">
+                <div class="price">5 MATIC per NFT</div>
+                <div class="usd">~ $2-3 USD</div>
+            </div>
+            <button class="btn btn-connect" id="connectBtn" onclick="connectWallet()">Connect MetaMask</button>
+            <div id="mintSection" style="display:none;">
+                <div class="wallet-addr" id="walletAddr"></div>
+                <div style="margin: 15px 0;">
+                    <label style="color:#8080b0;">Token ID (1-100):</label>
+                    <input type="number" id="tokenId" min="1" max="100" value="1"
+                        style="width:100%; padding:10px; margin-top:5px; background:#1a1a35; border:1px solid #3a3a6a; border-radius:8px; color:#e0e0ff; font-size:1rem;">
+                </div>
+                <button class="btn btn-mint" id="mintBtn" onclick="mintNFT()">Mint NFT</button>
+            </div>
+            <div id="status"></div>
+        </div>
+    </div>
+
+    <div class="gallery">
+        <h2>Sample Artworks</h2>
+        <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+
+    <div class="links">
+        <a href="https://opensea.io/collection/fractal-minds" target="_blank">View on OpenSea</a>
+        <a href="https://polygonscan.com/address/0x683EA598872667286903567f44e0493cf5C3B662" target="_blank">Smart Contract</a>
+        <a href="https://x.com/SotGEGDS" target="_blank">Twitter / X</a>
+    </div>
+
+    <footer>
+        Fractal Minds &copy; 2025 &mdash; Generative NFT Art on Polygon
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.1/ethers.min.js"></script>
+    <script>
+        const CONTRACT_ADDRESS = "0x683EA598872667286903567f44e0493cf5C3B662";
+        const POLYGON_CHAIN_ID = "0x89";
+        const IMAGES_CID = "bafybeif4yvxiw6fdqp2ie3tgocv37rkpn6pydw4r3tlith33pg3vya22im";
+        const ABI = [
+            "function mint(uint256 tokenId) external payable",
+            "function mintPrice() view returns (uint256)",
+            "function ownerOf(uint256 tokenId) view returns (address)",
+            "function MAX_SUPPLY() view returns (uint256)"
+        ];
+
+        let provider, signer, contract;
+
+        function setStatus(msg, type) {
+            const el = document.getElementById("status");
+            el.textContent = msg;
+            el.className = type;
+        }
+
+        async function switchToPolygon() {
+            try {
+                await window.ethereum.request({
+                    method: "wallet_switchEthereumChain",
+                    params: [{ chainId: POLYGON_CHAIN_ID }]
+                });
+            } catch (e) {
+                if (e.code === 4902) {
+                    await window.ethereum.request({
+                        method: "wallet_addEthereumChain",
+                        params: [{
+                            chainId: POLYGON_CHAIN_ID,
+                            chainName: "Polygon Mainnet",
+                            nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
+                            rpcUrls: ["https://polygon-rpc.com"],
+                            blockExplorerUrls: ["https://polygonscan.com"]
+                        }]
+                    });
+                }
+            }
+        }
+
+        async function connectWallet() {
+            if (!window.ethereum) {
+                setStatus("MetaMask not found. Please install MetaMask.", "error");
+                return;
+            }
+            try {
+                setStatus("Connecting...", "info");
+                await switchToPolygon();
+                provider = new ethers.BrowserProvider(window.ethereum);
+                signer = await provider.getSigner();
+                const addr = await signer.getAddress();
+                contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+
+                document.getElementById("connectBtn").style.display = "none";
+                document.getElementById("mintSection").style.display = "block";
+                document.getElementById("walletAddr").textContent = addr;
+                setStatus("Connected to Polygon!", "success");
+            } catch (e) {
+                setStatus("Connection failed: " + e.message, "error");
+            }
+        }
+
+        async function mintNFT() {
+            const tokenId = parseInt(document.getElementById("tokenId").value);
+            if (tokenId < 1 || tokenId > 100) {
+                setStatus("Token ID must be 1-100", "error");
+                return;
+            }
+            try {
+                setStatus("Checking availability...", "info");
+                try {
+                    await contract.ownerOf(tokenId);
+                    setStatus("Token #" + tokenId + " is already minted!", "error");
+                    return;
+                } catch (e) { /* not minted yet - good */ }
+
+                const price = await contract.mintPrice();
+                setStatus("Confirm transaction in MetaMask...", "info");
+                const tx = await contract.mint(tokenId, { value: price });
+                setStatus("Transaction sent! Waiting for confirmation...", "info");
+                await tx.wait();
+                setStatus("Minted Fractal Mind #" + tokenId + "! View on OpenSea.", "success");
+            } catch (e) {
+                setStatus("Mint failed: " + (e.reason || e.message), "error");
+            }
+        }
+
+        // Load gallery preview
+        const grid = document.getElementById("galleryGrid");
+        const samples = [1, 2, 3, 5, 6, 9, 10, 4];
+        samples.forEach(id => {
+            const div = document.createElement("div");
+            div.className = "gallery-item";
+            div.innerHTML = `<img src="https://gateway.pinata.cloud/ipfs/${IMAGES_CID}/${id}.png" alt="Fractal Mind #${id}" loading="lazy">
+                <div class="name">Fractal Mind #${id}</div>`;
+            grid.appendChild(div);
+        });
+    </script>
+</body>
+</html>
